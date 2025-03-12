@@ -25,7 +25,8 @@ def connect_db(config):
         port=config['port'],
         database=config['database'],
         user=config['user'],
-        password=config['password']
+        password=config['password'],
+        client_encoding='UTF8'
     )
     return conn
   except Exception as e:
@@ -63,7 +64,8 @@ def inject_single(csv_path, table_name, conn=None):
     # Clean column names (PostgreSQL compatibility)
     clean_headers = []
     for header in headers:
-      clean_header = re.sub(r'[^a-zA-Z0-9_]', '_', header).lower()
+      # clean_header = re.sub(r'[^a-zA-Z0-9_]', '_', header).lower()
+      clean_header = re.sub(r'[^\w가-힣]', '_', header).lower()
       if clean_header and clean_header[0].isdigit():
         clean_header = 'col_' + clean_header
       clean_headers.append(clean_header)
