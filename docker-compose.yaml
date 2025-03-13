@@ -5,8 +5,9 @@ services:
       context: ./workspace
       dockerfile: dockerfile
     volumes:
-      - ./workspace:/workspace
-      - ./workspace/data:/workspace/data
+      - .:/gentrification
+      - ./workspace:/gentrification/workspace
+      - ./workspace/data:/gentrification/workspace/data
     tty: true
     stdin_open: true
 
