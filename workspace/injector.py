@@ -64,15 +64,15 @@ def inject_single(csv_path, table_name, schema_name='public', conn=None):
     conn.commit()
 
     # Analyze CSV Header
-    df_headers = pd.read_csv(csv_path, nrows=0)
+    df_headers = pd.read_csv(csv_path, nrows=0, dtype=str)
     headers = list(df_headers.columns)
 
     # Clean column names (PostgreSQL compatibility)
     clean_headers = []
     for header in headers:
       clean_header = re.sub(r'[^\w가-힣]', '_', header).lower()
-      if clean_header and clean_header[0].isdigit():
-        clean_header = 'col_' + clean_header
+      # if clean_header and clean_header[0].isdigit():
+      #   clean_header = 'col_' + clean_header
       clean_headers.append(clean_header)
 
     # Drop existing temp table if exists
@@ -90,7 +90,7 @@ def inject_single(csv_path, table_name, schema_name='public', conn=None):
     with tqdm(total=total_rows, desc="Loading data", ncols=100) as pbar:
       # Use chunked processing to show progress
       chunk_size = 10000
-      for chunk in pd.read_csv(csv_path, chunksize=chunk_size):
+      for chunk in pd.read_csv(csv_path, chunksize=chunk_size, dtype=str):
         # Replace column names with clean names
         chunk.columns = clean_headers
 
